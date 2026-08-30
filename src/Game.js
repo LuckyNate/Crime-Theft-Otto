@@ -157,13 +157,6 @@ export class Game {
     this.combat.updateAim();
     this.hud.updateStats();
 
-    if (
-      this.hud.touchDebugMarker.visible &&
-      now > this.hud.touchDebugUntil
-    ) {
-      this.hud.touchDebugMarker.visible = false;
-    }
-
     this.world.update(dt);
     this.vehicles.updateRearTireSmoke(dt);
     this.soundWords.updateFootsteps();
