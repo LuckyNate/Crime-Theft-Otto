@@ -73,7 +73,7 @@ export class HudSystem extends GameSystem {
 
         this.touchDebugMarker.visible = true;
         this.touchDebugUntil =
-          performance.now() + 600;
+          performance.now() + 150;
       },
       { capture:true }
     );
