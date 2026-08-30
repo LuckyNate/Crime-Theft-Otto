@@ -98,7 +98,21 @@ export class ThirdPersonCamera {
 
     targetPos.y += this.height;
 
-    this.camera.position.lerp(targetPos, 0.16);
+    this.camera.position.lerp(
+      targetPos,
+      0.16
+    );
+
+    const cameraFloor = .08;
+
+    if (
+      this.camera.position.y <
+      cameraFloor
+    ) {
+      this.camera.position.y =
+        cameraFloor;
+    }
+
     this.camera.lookAt(lookAt);
   }
 }
