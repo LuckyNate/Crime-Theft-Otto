@@ -72,9 +72,23 @@ export class HudSystem extends GameSystem {
         );
 
         this.touchDebugMarker.visible = true;
-        this.touchDebugUntil =
-          performance.now() + 150;
       },
+      { capture:true }
+    );
+
+    const hideTouchDebug = () => {
+      this.touchDebugMarker.visible = false;
+    };
+
+    document.addEventListener(
+      "pointerup",
+      hideTouchDebug,
+      { capture:true }
+    );
+
+    document.addEventListener(
+      "pointercancel",
+      hideTouchDebug,
       { capture:true }
     );
   }
