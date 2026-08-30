@@ -23,7 +23,10 @@ export class Player {
 
     this.mesh = new THREE.Mesh(
       geometry,
-      new THREE.MeshStandardMaterial({ roughness:.85 })
+      new THREE.MeshStandardMaterial({
+        color: 0x8fd3ff,
+        roughness:.85
+      })
     );
 
     this.mesh.castShadow = true;

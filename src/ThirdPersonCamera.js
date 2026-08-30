@@ -103,6 +103,8 @@ export class ThirdPersonCamera {
       0.16
     );
 
+    // Ground collision: reject only the downward component so
+    // camera motion continues to slide along the ground plane.
     const cameraFloor = .08;
 
     if (
