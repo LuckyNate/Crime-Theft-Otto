@@ -210,6 +210,10 @@ export class PedestrianSystem extends GameSystem {
       );
 
     for (const target of this.targets) {
+      if (target.vehicleActivity) {
+        continue;
+      }
+
       if (!target.mesh.visible) {
         if (
           target.alive ||
