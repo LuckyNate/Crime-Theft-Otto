@@ -7,6 +7,7 @@ import { AutoAim } from "./AutoAim.js";
 import { WorldSystem } from "./systems/WorldSystem.js";
 import { VehicleSystem } from "./systems/VehicleSystem.js";
 import { PedestrianSystem } from "./systems/PedestrianSystem.js";
+import { NPCDrivingSystem } from "./systems/NPCDrivingSystem.js";
 import { InteractionSystem } from "./systems/InteractionSystem.js";
 import { CollisionSystem } from "./systems/CollisionSystem.js";
 import { PathfindingSystem } from "./systems/PathfindingSystem.js";
@@ -57,6 +58,7 @@ export class Game {
     this.world = this.addSystem("world", WorldSystem);
     this.vehicles = this.addSystem("vehicles", VehicleSystem);
     this.pedestrians = this.addSystem("pedestrians", PedestrianSystem);
+    this.npcDriving = this.addSystem("npcDriving", NPCDrivingSystem);
     this.interactions = this.addSystem("interactions", InteractionSystem);
     this.collision = this.addSystem("collision", CollisionSystem);
     this.pathfinding = this.addSystem("pathfinding", PathfindingSystem);
@@ -143,6 +145,7 @@ export class Game {
     this.interactions.updateInteractableSparkles();
     this.pedestrians.updateEnemies(now, dt);
     this.vehicles.updateParkedVehicles();
+    this.npcDriving.update(dt, now);
 
     if (!this.vehicles.updateMovement(dt, now)) {
       if (!this.interactions.updateInteraction(dt)) {
