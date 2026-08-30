@@ -12,7 +12,8 @@ export class AutoAim {
   }
 
   acquire(origin, lookDir, targets) {
-    this.camera.updateMatrixWorld();
+    this.camera.updateMatrixWorld(true);
+    this.camera.updateProjectionMatrix();
 
     this.pv.multiplyMatrices(
       this.camera.projectionMatrix,
@@ -22,7 +23,6 @@ export class AutoAim {
     this.frustum.setFromProjectionMatrix(this.pv);
 
     const shooting = this.skills.get("shooting");
-
     const ambiguity =
       this.baseAmbiguity * shooting;
 
@@ -32,11 +32,26 @@ export class AutoAim {
     const list = [];
 
     for (const t of targets) {
-      if (!t.targetable) continue;
-      if (!this.frustum.intersectsObject(t.mesh)) continue;
+      if (
+        !t.alive ||
+        !t.targetable ||
+        !t.mesh.visible
+      ) {
+        continue;
+      }
+
+      t.mesh.updateWorldMatrix(true, false);
+
+      if (!this.frustum.intersectsObject(t.mesh)) {
+        continue;
+      }
 
       const aimPoint =
-        t.mesh.position.clone().add(new THREE.Vector3(0, .45, 0));
+        t.mesh.getWorldPosition(
+          new THREE.Vector3()
+        );
+
+      aimPoint.y += .45;
 
       const delta =
         aimPoint.sub(origin);
@@ -44,7 +59,9 @@ export class AutoAim {
       const distance =
         delta.length();
 
-      if (distance > maxRange) continue;
+      if (distance > maxRange) {
+        continue;
+      }
 
       delta.normalize();
 
@@ -59,14 +76,17 @@ export class AutoAim {
         Math.acos(dot);
 
       list.push({
-        target:t,
+        target: t,
         angle,
         distance
       });
     }
 
-    list.sort((a,b) => {
-      if (Math.abs(a.angle - b.angle) <= ambiguity) {
+    list.sort((a, b) => {
+      if (
+        Math.abs(a.angle - b.angle) <=
+        ambiguity
+      ) {
         return a.distance - b.distance;
       }
 
