@@ -42,6 +42,7 @@ export class PedestrianSystem extends GameSystem {
         alive: true,
         spawn: new THREE.Vector3(),
         respawnAt: 0,
+        bumpingPlayer: false,
         sidewalkBlockX: 0,
         sidewalkBlockZ: 0,
         sidewalkDistance: 0,
@@ -201,6 +202,7 @@ export class PedestrianSystem extends GameSystem {
     target.mesh.visible = true;
     target.targetable = true;
     target.alive = true;
+    target.bumpingPlayer = false;
   }
 
   updateEnemies(now, dt) {
@@ -208,6 +210,13 @@ export class PedestrianSystem extends GameSystem {
       this.getControlledCenter(
         new THREE.Vector3()
       );
+
+    const playerCenter =
+      this.mounted
+        ? null
+        : this.player.getCenter(
+            new THREE.Vector3()
+          );
 
     for (const target of this.targets) {
       if (target.vehicleActivity) {
@@ -259,6 +268,32 @@ export class PedestrianSystem extends GameSystem {
         }
 
         continue;
+      }
+
+      if (playerCenter) {
+        const bumpDistance =
+          Math.hypot(
+            target.mesh.position.x - playerCenter.x,
+            target.mesh.position.z - playerCenter.z
+          );
+
+        const bumping =
+          bumpDistance < .8;
+
+        if (
+          bumping &&
+          !target.bumpingPlayer
+        ) {
+          this.spawnSoundWord(
+            "HEY!",
+            target.mesh.position,
+            .8
+          );
+        }
+
+        target.bumpingPlayer = bumping;
+      } else {
+        target.bumpingPlayer = false;
       }
 
       target.sidewalkDistance +=
